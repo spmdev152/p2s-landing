@@ -1,0 +1,131 @@
+/*
+  p2s component layer.
+
+  Reusable visual primitives that are too structural to express as a list of
+  utility classes at every call site.
+*/
+
+@layer components {
+  /*
+    Vertical rhythm helpers driven by the header metrics declared in the theme
+    layer. They keep the fixed header and the content offset in lockstep.
+  */
+  .header-height {
+    height: var(--header-height);
+  }
+
+  .header-offset {
+    padding-top: var(--header-height);
+  }
+
+  @media (min-width: 1024px) {
+    .header-height {
+      height: var(--header-height-lg);
+    }
+
+    .header-offset {
+      padding-top: var(--header-height-lg);
+    }
+  }
+
+  /* Horizontal gutters shared by every full width section. */
+  .shell {
+    margin-inline: auto;
+    width: 100%;
+    max-width: var(--container-shell);
+    padding-inline: 1.25rem;
+  }
+
+  @media (min-width: 1024px) {
+    .shell {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  /*
+    Metrics of the case file deck.
+
+    `--deck-strip` is both the height of a card's header strip and the vertical
+    step between pinned cards, which is what makes the strips stack flush into a
+    single column of edges rather than overlapping or leaving gaps.
+
+    The gutter is declared in pixels, like the other structural metrics in the
+    theme layer, because `use-deck-stacking.ts` parses it back out of the
+    computed style and a relative unit would resolve to the wrong number there.
+  */
+  .case-deck {
+    --deck-strip: 2.75rem;
+    --deck-top: calc(var(--header-height) + 0.5rem);
+    --deck-gutter: 24px;
+  }
+
+  @media (min-width: 1024px) {
+    .case-deck {
+      --deck-strip: 2.5rem;
+      --deck-top: calc(var(--header-height-lg) + 0.5rem);
+      --deck-gutter: 32px;
+    }
+  }
+
+  /*
+    Pinning is switched on by measurement, not by a breakpoint — see
+    `use-deck-stacking.ts` for why a card that cannot fit on screen must not be
+    allowed to stop moving.
+
+    The deck carries no trailing space, and must not be given any: the last card
+    can never pin regardless. A sticky element is constrained to the content box
+    of its containing block, and the last card's own bottom edge already sits on
+    that boundary, so there is nowhere for it to be held. `padding-bottom` does
+    not move the content box and buys nothing but an empty screen; the deck
+    instead lifts away as one the moment the last card lands.
+  */
+  .case-deck[data-stacked="true"] > li {
+    position: sticky;
+  }
+
+  /*
+    Faint engineering grid used behind the hero. Two hairline gradients rather
+    than an image keep it resolution independent and free of network cost.
+  */
+  .blueprint-grid {
+    background-image:
+      linear-gradient(to right, rgb(255 255 255 / 0.028) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.028) 1px, transparent 1px);
+    background-size: 5rem 5rem;
+  }
+
+  /*
+    Film grain. `feTurbulence` is rasterised once by the browser and then tiled,
+    which is considerably cheaper than an animated noise canvas.
+  */
+  .film-grain {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+  }
+
+  /*
+    Knocked-out display type: the glyph is drawn as an outline with no fill.
+    Used for the oversized section numerals that sit behind content, where a
+    solid fill would compete with the copy in front of it.
+  */
+  .text-outline {
+    color: transparent;
+    -webkit-text-stroke-width: 2px;
+    -webkit-text-stroke-color: var(--outline-color, var(--color-pulse));
+  }
+
+  /*
+    Diagonal hazard hatching used on structural dividers, echoing industrial
+    signage. Rendered with a repeating gradient so it scales with its container.
+  */
+  .hazard-hatch {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      var(--color-pulse) 0,
+      var(--color-pulse) 6px,
+      transparent 6px,
+      transparent 13px
+    );
+  }
+}
+

@@ -1,0 +1,240 @@
+/*
+  The rocket scene.
+
+  Every loop animates transform or opacity only, so the whole scene runs on the
+  compositor. Travel across the sky is measured against the sky box's width,
+  published by the stage as `--box-w`; small in-place motions use percentages
+  of the moving element itself. Either way the motion stays proportional at
+  every size. Durations and delays are custom
+  properties set per element and divided by `--scene-speed`, so the review page
+  can slow the whole scene down without touching a single keyframe.
+*/
+
+.scene-stage {
+  --scene-speed: 1;
+  background:
+    radial-gradient(ellipse 60% 55% at 78% 18%, color-mix(in srgb, var(--color-pulse) 20%, transparent), transparent),
+    radial-gradient(ellipse 55% 60% at 8% 92%, color-mix(in srgb, var(--color-pulse) 16%, transparent), transparent),
+    linear-gradient(180deg, color-mix(in srgb, var(--color-pulse) 9%, var(--color-abyss)), var(--color-abyss));
+}
+
+.scene-stage[data-paused="true"] * {
+  animation-play-state: paused !important;
+}
+
+.scene-loop {
+  animation-duration: calc(var(--loop-duration, 4s) / var(--scene-speed));
+  animation-delay: calc(var(--loop-delay, 0s) / var(--scene-speed));
+  animation-iteration-count: infinite;
+}
+
+/*
+  Parallax. A drifter crosses the stage from beyond its right edge to beyond
+  its left, sinking slightly as it goes, which is how the sky moves past
+  something climbing to the right.
+*/
+@keyframes scene-drift {
+  from {
+    transform: translate(var(--drift-from), calc(var(--drift-from) * -0.07));
+  }
+
+  to {
+    transform: translate(var(--drift-to), calc(var(--drift-to) * -0.07));
+  }
+}
+
+.scene-drift {
+  animation-name: scene-drift;
+  animation-timing-function: linear;
+}
+
+/* Speed lines along the flight axis, faded in and out at the ends. */
+@keyframes scene-streak {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+
+  14%,
+  72% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(var(--streak-dx), var(--streak-dy));
+    opacity: 0;
+  }
+}
+
+.scene-streak {
+  animation-name: scene-streak;
+  animation-timing-function: linear;
+}
+
+/* Sparkles breathe and turn a little; orbs only breathe. */
+@keyframes scene-twinkle {
+  0%,
+  100% {
+    transform: scale(0.55) rotate(0deg);
+    opacity: 0.45;
+  }
+
+  50% {
+    transform: scale(1) rotate(18deg);
+    opacity: 1;
+  }
+}
+
+@keyframes scene-glimmer {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.scene-twinkle {
+  animation-name: scene-twinkle;
+  animation-timing-function: ease-in-out;
+}
+
+.scene-glimmer {
+  animation-name: scene-glimmer;
+  animation-timing-function: ease-in-out;
+}
+
+/* Stars: three groups on offset, uneven beats so the field never pulses as one. */
+@keyframes scene-stars {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.scene-stars {
+  animation-name: scene-stars;
+  animation-timing-function: ease-in-out;
+}
+
+/* The far planets sway on a long, slow breath. */
+@keyframes scene-sway {
+  from {
+    transform: translate(0, 0);
+  }
+
+  to {
+    transform: translate(-1.2%, 0.8%);
+  }
+}
+
+.scene-sway {
+  animation-name: scene-sway;
+  animation-timing-function: ease-in-out;
+  animation-direction: alternate;
+}
+
+/* The rig rides the air: a slow climb and settle, with a slight pitch. */
+@keyframes scene-float {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  50% {
+    transform: translate(0.6%, -2.2%) rotate(-1.4deg);
+  }
+}
+
+.scene-float {
+  animation-name: scene-float;
+  animation-timing-function: ease-in-out;
+}
+
+/* The flame gutters: uneven stretches and squashes around its root. */
+@keyframes scene-flicker {
+  0%,
+  100% {
+    transform: scale(1, 1);
+  }
+
+  18% {
+    transform: scale(1.07, 0.94);
+  }
+
+  34% {
+    transform: scale(0.95, 1.05);
+  }
+
+  52% {
+    transform: scale(1.1, 0.96);
+  }
+
+  70% {
+    transform: scale(0.97, 1.03);
+  }
+
+  86% {
+    transform: scale(1.04, 0.97);
+  }
+}
+
+.scene-flicker {
+  animation-name: scene-flicker;
+  animation-timing-function: linear;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-stage * {
+    animation: none !important;
+  }
+}
+
+/*
+  Legibility veil behind copy laid over the scene. It sits above the back
+  clouds and below the headline, so a bright cloud drifting behind the type
+  is darkened rather than competing with it. Top-down on narrow screens, where
+  the copy sits above the rig; from the left on wide ones, where it sits beside.
+*/
+.scene-veil {
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--color-abyss) 78%, transparent) 0%,
+    color-mix(in srgb, var(--color-abyss) 55%, transparent) 55%,
+    transparent 85%
+  );
+}
+
+@media (min-width: 1024px) {
+  .scene-veil {
+    background: radial-gradient(
+      ellipse 62% 70% at 18% 42%,
+      color-mix(in srgb, var(--color-abyss) 80%, transparent) 0%,
+      color-mix(in srgb, var(--color-abyss) 50%, transparent) 55%,
+      transparent 100%
+    );
+  }
+}
+
+/* The rig flies in from the lower left once, on load. */
+@keyframes scene-launch {
+  from {
+    transform: translate(-34%, 30%) rotate(4deg);
+    opacity: 0;
+  }
+
+  to {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.scene-launch {
+  animation: scene-launch 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both;
+}

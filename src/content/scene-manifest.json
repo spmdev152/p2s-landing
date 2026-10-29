@@ -1,0 +1,112 @@
+{
+  "cat": {
+    "src": "/scene/cat.png",
+    "width": 1175,
+    "height": 1060
+  },
+  "rocket": {
+    "src": "/scene/rocket.png",
+    "width": 1321,
+    "height": 909
+  },
+  "flame": {
+    "src": "/scene/flame.png",
+    "width": 1400,
+    "height": 682
+  },
+  "cloud-cluster": {
+    "src": "/scene/cloud-cluster.png",
+    "width": 1200,
+    "height": 755
+  },
+  "cloud-long": {
+    "src": "/scene/cloud-long.png",
+    "width": 1200,
+    "height": 530
+  },
+  "cloud-puff": {
+    "src": "/scene/cloud-puff.png",
+    "width": 1000,
+    "height": 460
+  },
+  "planet-glow": {
+    "src": "/scene/planet-glow.png",
+    "width": 1000,
+    "height": 994
+  },
+  "planet-dark": {
+    "src": "/scene/planet-dark.png",
+    "width": 700,
+    "height": 691
+  },
+  "sparkle-volt": {
+    "src": "/scene/sparkle-volt.png",
+    "width": 229,
+    "height": 240
+  },
+  "sparkle-lilac": {
+    "src": "/scene/sparkle-lilac.png",
+    "width": 221,
+    "height": 240
+  },
+  "orb-pale": {
+    "src": "/scene/orb-pale.png",
+    "width": 130,
+    "height": 130
+  },
+  "orb-lilac": {
+    "src": "/scene/orb-lilac.png",
+    "width": 200,
+    "height": 198
+  },
+  "orb-volt": {
+    "src": "/scene/orb-volt.png",
+    "width": 200,
+    "height": 198
+  },
+  "streak-pulse-1": {
+    "src": "/scene/streak-pulse-1.png",
+    "width": 700,
+    "height": 366
+  },
+  "streak-pulse-2": {
+    "src": "/scene/streak-pulse-2.png",
+    "width": 700,
+    "height": 342
+  },
+  "streak-pulse-3": {
+    "src": "/scene/streak-pulse-3.png",
+    "width": 600,
+    "height": 242
+  },
+  "streak-volt-1": {
+    "src": "/scene/streak-volt-1.png",
+    "width": 700,
+    "height": 346
+  },
+  "streak-volt-2": {
+    "src": "/scene/streak-volt-2.png",
+    "width": 700,
+    "height": 315
+  },
+  "streak-volt-3": {
+    "src": "/scene/streak-volt-3.png",
+    "width": 600,
+    "height": 237
+  },
+  "streak-lilac-1": {
+    "src": "/scene/streak-lilac-1.png",
+    "width": 700,
+    "height": 325
+  },
+  "streak-lilac-2": {
+    "src": "/scene/streak-lilac-2.png",
+    "width": 700,
+    "height": 301
+  },
+  "streak-lilac-3": {
+    "src": "/scene/streak-lilac-3.png",
+    "width": 600,
+    "height": 238
+  }
+}

@@ -1,0 +1,80 @@
+/*
+  p2s base layer.
+
+  Element level defaults that every page inherits. Nothing here is decorative;
+  anything reusable and visual belongs in `utilities.css` instead.
+*/
+
+@layer base {
+  * {
+    border-color: var(--color-chalk);
+  }
+
+  /*
+    The scrollbar's gutter is reserved even while scrolling is locked, so
+    locking and unlocking it (the page loader does both) never shifts the
+    layout sideways.
+  */
+  html {
+    background-color: var(--color-void);
+    color-scheme: dark;
+    scrollbar-gutter: stable;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--color-void);
+    color: var(--color-chalk);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "ss02";
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: var(--color-volt);
+    color: var(--color-void);
+  }
+
+  /*
+    The native cursor is suppressed only while the custom one is mounted, which
+    happens exclusively for fine pointers. `!important` is required to beat the
+    `cursor` utilities Tailwind emits on interactive elements.
+  */
+  html.has-custom-cursor,
+  html.has-custom-cursor * {
+    cursor: none !important;
+  }
+
+  :focus-visible {
+    outline: var(--stroke-width) solid var(--color-volt);
+    outline-offset: 3px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: var(--color-void);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--color-pulse);
+    border: 2px solid var(--color-void);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-pulse-soft);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}

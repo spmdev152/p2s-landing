@@ -1,0 +1,108 @@
+/*
+  p2s theme layer.
+
+  Authoritative declaration of every design token. Tailwind derives its utility
+  classes from these custom properties, and TypeScript reads the color values
+  back at runtime through `design-system/tokens/theme-colors.ts`, so no token
+  value is ever written twice.
+*/
+
+@theme {
+  /* Surfaces --------------------------------------------------------------- */
+  --color-void: #0e0f12;
+  --color-abyss: #0b0725;
+  --color-carbon: #17181d;
+
+  /* Signal accent ---------------------------------------------------------- */
+  --color-volt: #a6fa5f;
+  --color-volt-deep: #7ed438;
+
+  /* Structural accent ------------------------------------------------------ */
+  --color-pulse: #5a16ff;
+  --color-pulse-soft: #8c74ff;
+  --color-pulse-pale: #d3c9fb;
+
+  /* Alert accent, reserved for single focal moments ------------------------ */
+  --color-ember: #ff4d2e;
+
+  /* Neutrals --------------------------------------------------------------- */
+  --color-chalk: #ffffff;
+  --color-ash: #9a9aa6;
+
+  /* Typefaces -------------------------------------------------------------- */
+  --font-display: var(--font-anton), "Arial Narrow", "Haettenschweiler", sans-serif;
+  --font-sans: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-space-mono), ui-monospace, "SFMono-Regular", monospace;
+
+  /* Type scale ------------------------------------------------------------- */
+  /*
+    The hero statement sits inside the rocket scene, in a column beside the
+    rig rather than across the whole measure. Anton sets at an average advance
+    of 0.40em, so the longest line (16 characters) runs to 6.4em: about 700px
+    at 1440px wide, which clears the rider. The floor keeps the 18 character
+    first line inside a 335px phone column.
+  */
+  --text-hero: clamp(2.5rem, 7.6vw, 8.5rem);
+  --text-hero--line-height: 0.88;
+  --text-hero--letter-spacing: -0.012em;
+
+  /*
+    Section headings sit between the hero statement and the list labels. The
+    ceiling keeps the longest line (16 characters) inside a seven column measure
+    at the widest layout.
+  */
+  --text-section: clamp(2.5rem, 6.4vw, 6rem);
+  --text-section--line-height: 0.9;
+  --text-section--letter-spacing: -0.012em;
+
+  --text-display: clamp(1.75rem, 5vw, 3.5rem);
+  --text-display--line-height: 0.9;
+  --text-display--letter-spacing: -0.01em;
+
+  --text-ticker: clamp(1.0625rem, 1.9vw, 1.75rem);
+  --text-ticker--line-height: 1;
+  --text-ticker--letter-spacing: 0.005em;
+
+  --text-lede: clamp(1rem, 0.9rem + 0.35vw, 1.1875rem);
+  --text-lede--line-height: 1.6;
+
+  --text-eyebrow: 0.6875rem;
+  --text-eyebrow--line-height: 1;
+  --text-eyebrow--letter-spacing: 0.18em;
+
+  /*
+    The line height must exceed the face's natural glyph extent (~1.2em for
+    Space Grotesk). At 1 the glyphs overflow their own line box, which breaks any
+    clipping mask built around a single line — see `site-header/nav-link.tsx`.
+  */
+  --text-nav: 0.8125rem;
+  --text-nav--line-height: 1.4;
+  --text-nav--letter-spacing: 0.06em;
+
+  /* Easing ----------------------------------------------------------------- */
+  --ease-quick: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-snap: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-inout-quick: cubic-bezier(0.455, 0.03, 0.515, 0.955);
+
+  /* Shape ------------------------------------------------------------------ */
+  --radius-brutal: 0.5rem;
+
+  /* Layout ----------------------------------------------------------------- */
+  --container-shell: 85rem;
+}
+
+:root {
+  /*
+    Header metrics are consumed by both the fixed header and the offset that
+    keeps page content clear of it, so they live outside `@theme` where they can
+    be referenced by the component layer without generating utilities.
+  */
+  --header-height: 5rem;
+  --header-height-lg: 6.5rem;
+
+  /* Thickness of every structural rule and outline in the brutalist system. */
+  --stroke-width: 2px;
+
+  /* Distance a surface sits from its offset shadow block at rest. */
+  --offset-distance: 5px;
+}

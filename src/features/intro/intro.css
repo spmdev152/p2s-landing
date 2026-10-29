@@ -1,0 +1,239 @@
+/*
+  The page loader.
+
+  Two full-screen planes, the same construction as every control on the site:
+  a `void` panel in front carrying the mark and the bar, and a `pulse` panel
+  behind it. On reveal both lift like a shutter, the back one a beat late, so a
+  band of pulse sweeps up behind the front panel's volt edge.
+*/
+
+/*
+  The loader spans `100vw` rather than the viewport box, so it also covers the
+  scrollbar gutter the page keeps reserved: no strip of page shows beside the
+  shutter while it lifts.
+*/
+.page-loader {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  z-index: 100;
+}
+
+.page-loader__plane {
+  position: absolute;
+  inset: 0;
+  transition: transform 0.95s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.page-loader__plane--back {
+  background: var(--color-pulse);
+}
+
+.page-loader__plane--front {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-void);
+}
+
+/* The front panel's leading edge: the volt line that leads the shutter up. */
+.page-loader__plane--front::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 6px;
+  background: var(--color-volt);
+}
+
+.page-loader[data-stage="reveal"] {
+  pointer-events: none;
+}
+
+.page-loader[data-stage="reveal"] .page-loader__plane--front {
+  transform: translateY(-100%);
+}
+
+.page-loader[data-stage="reveal"] .page-loader__plane--back {
+  transform: translateY(-100%);
+  transition-delay: 0.14s;
+}
+
+.page-loader__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.75rem;
+  padding-inline: 1.25rem;
+}
+
+.page-loader__logo,
+.page-loader__bar {
+  width: clamp(14rem, 56vw, 26rem);
+}
+
+/*
+  The letters arrive one by one, each whole: its share of the silhouette, its
+  extrusion and its empty face share a class and move as one. The steps are
+  deliberately short, so the three read as a quick one-two-three rather than
+  as three separate events.
+*/
+.page-loader .logo-letter-p {
+  animation: loader-letter 0.6s cubic-bezier(0.34, 1.5, 0.64, 1) 0.15s both;
+}
+
+.page-loader .logo-letter-two {
+  animation: loader-letter 0.6s cubic-bezier(0.34, 1.5, 0.64, 1) 0.24s both;
+}
+
+.page-loader .logo-letter-s {
+  animation: loader-letter 0.6s cubic-bezier(0.34, 1.5, 0.64, 1) 0.33s both;
+}
+
+/*
+  The bar: a dark track over a pulse plane offset like every control, filled
+  from the left with volt hazard stripes that march while it loads. Ticks
+  split it into ten segments and a chalk edge leads the fill. Progress arrives
+  as `--progress`, from 0 to 1, written by the loader each frame.
+*/
+.page-loader__bar {
+  --progress: 0;
+  --stripe: 22.627px;
+  position: relative;
+  height: 1.125rem;
+  animation: loader-fade 0.5s ease 0.45s both;
+}
+
+.page-loader__bar-plane {
+  position: absolute;
+  inset: 0;
+  background: var(--color-pulse);
+  translate: var(--offset-distance) var(--offset-distance);
+}
+
+.page-loader__bar-track {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border: 2px solid color-mix(in srgb, var(--color-chalk) 28%, transparent);
+  background: var(--color-carbon);
+}
+
+.page-loader__bar-fill {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--color-volt) 0,
+    var(--color-volt) 8px,
+    var(--color-volt-deep) 8px,
+    var(--color-volt-deep) 16px
+  );
+  background-size: var(--stripe) var(--stripe);
+  clip-path: inset(0 calc((1 - var(--progress)) * 100%) 0 0);
+  animation: loader-march 0.55s linear infinite;
+}
+
+.page-loader__bar-edge {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--progress) * 100% - 3px);
+  width: 3px;
+  background: var(--color-chalk);
+}
+
+.page-loader__bar-ticks {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    to right,
+    transparent 0,
+    transparent calc(10% - 2px),
+    var(--color-void) calc(10% - 2px),
+    var(--color-void) 10%
+  );
+}
+
+@keyframes loader-fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes loader-letter {
+  from {
+    transform: translateY(80px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes loader-march {
+  from {
+    background-position: 0 0;
+  }
+
+  to {
+    background-position: var(--stripe) 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-loader *,
+  .page-loader .logo-letter-p,
+  .page-loader .logo-letter-two,
+  .page-loader .logo-letter-s {
+    animation: none !important;
+  }
+
+  .page-loader__plane {
+    transition: opacity 0.35s ease;
+  }
+
+  .page-loader[data-stage="reveal"] .page-loader__plane--front,
+  .page-loader[data-stage="reveal"] .page-loader__plane--back {
+    transform: none;
+    opacity: 0;
+  }
+}
+
+/*
+  Scrolling is locked for as long as the loader is on screen, from the very
+  first paint: the root layout renders `data-loader="active"` on the
+  document element and the loader removes it only once it has gone, not when
+  it starts to lift. Locking from script instead would leave the page
+  scrollable, scrollbar and all, until hydration.
+*/
+html[data-loader="active"] {
+  overflow: hidden;
+}
+
+/*
+  The loader plays once per visit. On any later full load the boot script in
+  the document head marks the document before the first paint, and the loader,
+  which is still in the server's HTML, never shows. Replays on review pages opt
+  out with `data-always`.
+*/
+html[data-intro-seen] .page-loader:not([data-always]) {
+  display: none;
+}
+
+/*
+  Entrance animations that live in CSS are held until the loader lifts. The
+  root layout renders `data-intro="pending"` on the document element, and the
+  intro context switches it to `done`.
+*/
+html[data-intro="pending"] .scene-launch {
+  animation-play-state: paused;
+}
